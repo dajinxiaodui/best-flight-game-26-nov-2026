@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloudrunner Courier — a valley delivery flight</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #0a1420;
+    height: 100%;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  canvas {
+    width: min(100vw, 177.78vh);
+    height: auto;
+    aspect-ratio: 16 / 9;
+    display: block;
+    background: #2f6fd0;
+    touch-action: none;
+  }
+  #err {
+    display: none;
+    position: fixed;
+    left: 8px;
+    bottom: 8px;
+    max-width: 90vw;
+    background: #300;
+    color: #fdd;
+    font: 12px monospace;
+    padding: 6px 8px;
+    white-space: pre-wrap;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+<canvas id="game" width="960" height="540"></canvas>
+<div id="err"></div>
+<noscript>Cloudrunner Courier needs JavaScript to fly.</noscript>
+<script type="module">
+  // Error trap for local verification: any load or runtime error is written
+  // into #err (and the page title) so a headless run can see it.
+  const errBox = document.getElementById('err');
+  function report(msg) {
+    errBox.textContent += msg + '\n';
+    errBox.style.display = 'block';
+    document.title = 'ERR: ' + msg;
+  }
+  window.addEventListener('error', (e) => report('error: ' + e.message));
+  window.addEventListener('unhandledrejection', (e) => report('rejection: ' + e.reason));
+  try {
+    await import('./src/main.js');
+  } catch (e) {
+    report('import failed: ' + (e && e.message ? e.message : e));
+  }
+</script>
+</body>
+</html>
